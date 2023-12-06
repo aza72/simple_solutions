@@ -22,37 +22,6 @@ class HomePageView(TemplateView):
          })
         return context
 
-class CreateCheckoutSessionView(View):
-    def post(self, request, *args, **kwargs):
-        product_id = self.kwargs["pk"]
-        product = Item.objects.get(pk=product_id)
-        YOUR_DOMAIN = "http://127.0.0.1:8000"
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[
-                {
-                    'price_data': {
-                        'currency': 'usd',
-                        'unit_amount': product.price,
-                        'product_data': {
-                            'name': product.name,
-                        },
-                    },
-                    'quantity': 1,
-                },
-            ],
-            metadata={
-                "product_id": product.id
-            },
-            mode='payment',
-            success_url=YOUR_DOMAIN + '/success/',
-            cancel_url=YOUR_DOMAIN + '/cancel/',
-        )
-        print(checkout_session.id)
-        return JsonResponse({
-            'id': checkout_session.id
-        })
-
 class ItemPageView(TemplateView):
     template_name = "store/item.html"
 
@@ -72,18 +41,6 @@ class SuccessView(TemplateView):
 
 class CancelView(TemplateView):
     template_name = "store/cancel.html"
-
-
-
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs.get("pk")
-        product = Item.objects.get(pk=pk)
-        context = super(ItemPageView, self).get_context_data(**kwargs)
-        context.update({
-            "product": product,
-            "STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY
-        })
-        return context
 
 
 class CreateCheckoutSessionView(View):
