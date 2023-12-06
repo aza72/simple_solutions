@@ -2,9 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Товары</title>
 </head>
 <body>
-
+{% for item in items %}
+         <br>
+        <div class="product">
+            <div class="description">
+                <h3>Название: {{ item.name }}</h3>
+                <h4>Описание: {{ item.description }}</h4>
+                <h5>Цена: ${{ item.price }}</h5>
+            </div>
+        </div>
+        <a href="{% url 'item' item.pk %}">
+            <button type="button" id="checkout-button">Перейти к товару</button>
+        </a>
+    {% endfor %}
 </body>
 </html>
